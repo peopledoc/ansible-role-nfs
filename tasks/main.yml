@@ -23,13 +23,26 @@
   when: ansible_os_family == 'Debian'
 
 - name: Ensure directories to export exist
-  file: 'path="{{ item.strip().split()[0] }}" state=directory'
+  file:
+    path: "{{ item.strip().split()[0] }}"
+    state: directory
+    owner: "{{ nfs_owner|default('root') }}"
+    group: "{{ nfs_group|default('root') }}"
   with_items: "{{ nfs_exports }}"
 
 - name: Copy exports file.
   template:
     src: exports.j2
     dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nfs
+
+- name: Configure NFS domain
+  template:
+    src: idmapd.conf.template
+    dest: /etc/idmapd.conf
     owner: root
     group: root
     mode: 0644
