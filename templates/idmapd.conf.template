@@ -1,0 +1,11 @@
+[General]
+
+Verbosity = 0
+Pipefs-Directory = {{ nfs_pipefs }}
+# set your own domain here, if it differs from FQDN minus hostname
+{% if nfs_mapping.domain is defined %}Domain = {{ nfs_mapping.domain }}{% endif %}
+
+[Mapping]
+
+Nobody-User = {{ nfs_mapping.nobody_user|default("nobody") }}
+Nobody-Group = {{ nfs_mapping.nobody_group|default("nogroup") }}

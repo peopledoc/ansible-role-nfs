@@ -1,5 +1,12 @@
 ---
 nfs_exports: []
+nfs_owner: ""
+nfs_group: ""
 
 nfs_rpcbind_state: started
 nfs_rpcbind_enabled: true
+nfs_pipefs: "/run/rpc_pipefs"
+nfs_mapping:
+  nobody_user: []
+  nobody_group: []
+  domain: []
