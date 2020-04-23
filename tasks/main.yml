@@ -15,49 +15,12 @@
     - ansible_os_family == 'RedHat'
     - ansible_distribution == "Fedora"
 
-# Setup/install tasks.
-- include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- include_tasks: server.yml
+  when:
+    - "'nfsservers' in groups"
+    - "ansible_fqdn in groups['nfsservers']"
 
-- include_tasks: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
-
-- name: Ensure directories to export exist
-  file:
-    path: "{{ item.strip().split()[0] }}"
-    state: directory
-    owner: "{{ nfs_owner|default('root') }}"
-    group: "{{ nfs_group|default('root') }}"
-  with_items: "{{ nfs_exports }}"
-  when: item.path is undefined
-
-- name: Ensure directories to export exist (extended version)
-  file:
-    path: "{{ item.path }}"
-    state: directory
-    owner: "{{ item.owner|default(nfs_owner|default('root')) }}"
-    group: "{{ item.group|default(nfs_group|default('root')) }}"
-  with_items: "{{ nfs_exports }}"
-  when: item.path is defined
-
-- name: Copy exports file.
-  template:
-    src: exports.j2
-    dest: /etc/exports
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload nfs
-
-- name: Configure NFS domain
-  template:
-    src: idmapd.conf.template
-    dest: /etc/idmapd.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify: reload nfs
-
-- name: Ensure nfs is running.
-  service: "name={{ nfs_server_daemon }} state=started enabled=yes"
-  when: nfs_exports|length
+- include_tasks: client.yml
+  when:
+    - "'nfsclients' in groups"
+    - "ansible_fqdn in groups['nfsclients']"

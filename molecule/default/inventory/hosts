@@ -1,0 +1,7 @@
+[nfsservers]
+pd-nfs-server-stretch
+pd-nfs-server-buster
+
+[nfsclients]
+pd-nfs-client-stretch
+pd-nfs-client-buster
