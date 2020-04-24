@@ -1,0 +1,6 @@
+---
+nfs_client_mounts:
+  stretch_data:
+    path: /vault-stretch/somedata
+    src: pd-nfs-server-stretch:/vault/somedata
+...
